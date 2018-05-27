@@ -1,6 +1,8 @@
 package webdev.models;
 
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +15,16 @@ public class Course {
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
+	@OneToMany(mappedBy="course") 
+	private List<Module> modules;
+	
+	
+
+	public List<Module> getModules() {
+		return this.modules;
+	}
+
+	
 	
 	public int getId() {
 		return id;
