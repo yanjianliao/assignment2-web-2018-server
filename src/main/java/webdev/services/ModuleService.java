@@ -1,13 +1,16 @@
 package webdev.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,10 +44,38 @@ public class ModuleService {
 		Optional<Course> data = courseRepository.findById(courseId);
 		if(data.isPresent()) {
 			Course course = data.get();
+			course.setModified(new Timestamp(System.currentTimeMillis()));
 			newModule.setCourse(course);
 			moduleRepository.save(newModule);
 			return newModule;
 		}
 		return null;
 	}	
+	
+	@DeleteMapping("/api/module/{moduleId}")
+	public void deleteModule(@PathVariable("moduleId") int moduleId) {
+		moduleRepository.deleteById(moduleId);
+	}
+		
+	@GetMapping("/api/module")
+	public List<Module> findAllModules() {
+		return (List<Module>) moduleRepository.findAll();
+	}
+	
+	@PutMapping("/api/module/{id}")
+	public Module updateModule(@PathVariable("id") int id, @RequestBody Module module) {
+		Optional<Module> data = moduleRepository.findById(id);
+		if(data.isPresent()) {
+			Module oldModule = data.get();
+			oldModule.setCourse(module.getCourse());
+			oldModule.setTitle(module.getTitle());
+			moduleRepository.save(oldModule);
+			return oldModule;
+		}
+		return null;
+	}
+	
+	
+	
+	
 }
