@@ -59,6 +59,10 @@ public class ModuleService {
 		
 	@GetMapping("/api/module")
 	public List<Module> findAllModules() {
+		
+		List<Module> list = (List<Module>) moduleRepository.findAll();
+		
+		
 		return (List<Module>) moduleRepository.findAll();
 	}
 	
