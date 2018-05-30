@@ -23,10 +23,8 @@ public class Module {
 	private int id;
 	private String title;
 	
-	@OneToMany(mappedBy="module") 
+	@OneToMany(mappedBy="module", cascade = CascadeType.REMOVE, orphanRemoval = true) 
 	private List<Lesson> lessons;
-	
-	
 	
 	@ManyToOne
 	@JsonIgnore
