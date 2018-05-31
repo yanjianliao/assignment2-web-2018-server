@@ -1,6 +1,7 @@
 package webdev.services;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class ModuleService {
 			Course course = data.get();
 			return course.getModules();
 		}
-		return null;
+		return new ArrayList<Module>();
 	}
 	
 	@PostMapping("/api/course/{courseId}/module")
@@ -54,6 +55,13 @@ public class ModuleService {
 	
 	@DeleteMapping("/api/module/{moduleId}")
 	public void deleteModule(@PathVariable("moduleId") int moduleId) {
+		Optional<Module> data = moduleRepository.findById(moduleId);
+		if(data.isPresent()) {
+			Module module = data.get();
+			Course course = module.getCourse();
+			course.setModified(new Timestamp(System.currentTimeMillis()));
+		}
+			
 		moduleRepository.deleteById(moduleId);
 	}
 		
@@ -76,7 +84,14 @@ public class ModuleService {
 		return null;
 	}
 	
-	
-	
+	@GetMapping("/api/module/{id}")
+	public Module findModuleById(@PathVariable("id") int id) {
+		Optional<Module> data = moduleRepository.findById(id);
+		if(data.isPresent()) {
+			return data.get();
+		}
+		
+		return null;
+	}
 	
 }
